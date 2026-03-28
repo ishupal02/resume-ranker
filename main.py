@@ -207,11 +207,11 @@ st.markdown("""
     
     /* Info Box */
     .info-box {
-        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-        border-left: 4px solid #2196f3;
-        padding: 1rem;
-        border-radius: 10px;
-        margin: 1rem 0;
+       
+    background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
+    border-left: 4px solid #00e5ff;
+    color: white;
+
     }
     
     /* Success/Error Messages */
@@ -456,4 +456,82 @@ if analyze_button:
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     st.markdown(f"""
-                        <div class="metric
+                        <div class="metric-card">
+                            <div class="metric-value">{ranking_df['Match Score'].max()}%</div>
+                            <div class="metric-label">Best Match</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                with col2:
+                    st.markdown(f"""
+                        <div class="metric-card">
+                            <div class="metric-value">{ranking_df['Match Score'].mean():.1f}%</div>
+                            <div class="metric-label">Average Score</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                with col3:
+                    st.markdown(f"""
+                        <div class="metric-card">
+                            <div class="metric-value">{len(ranking_df)}</div>
+                            <div class="metric-label">Total Candidates</div>
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+
+                # Top Candidate Highlight
+                top_candidate = ranking_df.iloc[0]
+
+                st.markdown(f"""
+                    <div class="card">
+                        <h3>🏆 Top Candidate</h3>
+                        <p><strong>Name:</strong> {top_candidate['Candidate']}</p>
+                        <p><strong>Match Score:</strong> {top_candidate['Match Score']}%</p>
+                        <p>This candidate best matches the job description based on AI similarity analysis.</p>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                # Score Visualization
+                st.markdown('<div class="section-header">📊 Score Visualization</div>', unsafe_allow_html=True)
+
+                import pandas as pd
+                import altair as alt
+
+                chart = alt.Chart(ranking_df).mark_bar().encode(
+                    x='Candidate',
+                    y='Match Score',
+                    tooltip=['Candidate', 'Match Score']
+                ).properties(
+                    height=400
+                )
+
+                st.altair_chart(chart, use_container_width=True)
+
+                st.markdown('<hr class="section-divider">', unsafe_allow_html=True)
+
+                # Download Results
+                st.markdown('<div class="section-header">⬇️ Download Results</div>', unsafe_allow_html=True)
+
+                csv = ranking_df.to_csv(index=False).encode('utf-8')
+
+                st.download_button(
+                    label="📥 Download Ranking Report",
+                    data=csv,
+                    file_name="resume_ranking_results.csv",
+                    mime="text/csv"
+                )
+
+            except Exception as e:
+                st.markdown(f"""
+                    <div class="error-message">
+                        <strong>❌ Error during analysis:</strong> {str(e)}
+                    </div>
+                """, unsafe_allow_html=True)
+
+        else:
+            st.markdown("""
+                <div class="error-message">
+                    <strong>❌ Error:</strong> Could not extract text from uploaded resumes.
+                </div>
+            """, unsafe_allow_html=True)
