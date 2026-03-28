@@ -478,7 +478,7 @@ st.markdown("""
 <div style="text-align: center; margin-top: 3rem; padding: 2rem; color: rgba(255,255,255,0.8);">
     <div style="font-size: 1.1rem; margin-bottom: 0.5rem;">
         <i class="fas fa-heart" style="color: #ef4444;"></i>
-        Made with ❤️ using Streamlit + AI
+        Made by IP & AR.
     </div>
     <div style="font-size: 0.9rem;">
         TF-IDF • Cosine Similarity • NLP Processing
