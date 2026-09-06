@@ -37,7 +37,7 @@ def repeated_words(text, limit=8):
     return [(word, count) for word, count in counts.most_common() if count >= 4][:limit]
 
 
-def analyze_resume(job_description, resume_text):
+def analyze_resume(job_description, resume_text, scoring_mode="Balanced"):
     """Return ATS signals and plain-language resume recommendations."""
     resume_words = set(_words(resume_text))
     keywords = _keyword_terms(job_description)
@@ -59,7 +59,17 @@ def analyze_resume(job_description, resume_text):
     contact_score = round(sum(contact_checks.values()) / len(contact_checks) * 100)
     word_count = len(_words(resume_text))
 
-    score = round(keyword_score * 0.55 + section_score * 0.25 + contact_score * 0.20)
+    weights = {
+        "Balanced": (0.55, 0.25, 0.20),
+        "Keyword focus": (0.70, 0.15, 0.15),
+        "Structure focus": (0.35, 0.45, 0.20),
+    }
+    keyword_weight, section_weight, contact_weight = weights.get(scoring_mode, weights["Balanced"])
+    score = round(
+        keyword_score * keyword_weight
+        + section_score * section_weight
+        + contact_score * contact_weight
+    )
     suggestions = []
     if missing:
         suggestions.append(

@@ -44,6 +44,8 @@ st.markdown("""
         text-align: left;
         margin-bottom: 0.7rem;
     }
+    .eyebrow { color: var(--coral); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.16em; margin-bottom: 0.8rem; }
+    .sidebar-mark { color: var(--coral); font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 0.4rem; }
     .sub-header { color: var(--muted); text-align: left; max-width: 650px; margin-bottom: 2.5rem; }
     .card, .candidate-card, .chart-container {
         background: var(--panel);
@@ -64,294 +66,70 @@ st.markdown("""
     .ats-warn { color: #b15a20; font-weight: 700; }
     .keyword-chip { display: inline-block; background: #e6f2ee; color: var(--teal); border-radius: 999px; padding: 0.25rem 0.55rem; margin: 0.15rem; font-size: 0.8rem; }
 
-    /* Global Styles */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    
-    * {
-        font-family: 'Poppins', sans-serif;
-    }
-    
-    /* Main Container */
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+    * { font-family: 'DM Sans', sans-serif; }
+    h1, h2, h3, .main-header { font-family: 'Space Grotesk', sans-serif; }
     .main { min-height: 100vh; }
-    
-    /* Header Styles */
-    .main-header {
-        font-size: 3rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        animation: fadeInDown 0.8s ease-out;
-    }
-    
-    .sub-header {
-        font-size: 1.1rem;
-        color: #666;
-        text-align: center;
-        margin-bottom: 2rem;
-        animation: fadeInUp 0.8s ease-out;
-    }
-    
-    /* Card Styles */
-    .card {
-        background: black;
-        border-radius: 15px;
-        padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.5rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Section Headers */
-    .section-header {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    /* File Upload */
-    .stFileUploader {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Button Styles */
-    .stButton > button {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
-    }
-    
-    /* Divider */
-    .section-divider {
-        border: none;
-        border-top: 2px solid #e0e0e0;
-        margin: 2rem 0;
-    }
-    
-    /* Score Badges */
-    .score-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 20px;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-    
-    .score-high {
-        background: linear-gradient(90deg, #2ecc71, #27ae60);
-        color: white;
-    }
-    
-    .score-medium {
-        background: linear-gradient(90deg, #f39c12, #e67e22);
-        color: white;
-    }
-    
-    .score-low {
-        background: linear-gradient(90deg, #e74c3c, #c0392b);
-        color: white;
-    }
-    
-    /* Metrics */
-    .metric-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-    }
-    
-    .metric-value {
-        font-size: 2rem;
-        font-weight: 700;
-    }
-    
-    .metric-label {
-        font-size: 0.9rem;
-        opacity: 0.9;
-    }
-    
-    /* Table Styles */
-    .stDataFrame {
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Animations */
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    @keyframes pulse {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.5;
-        }
-    }
-    
-    .loading-pulse {
-        animation: pulse 1.5s infinite;
-    }
-    
-    /* Sidebar */
-    .sidebar .sidebar-content {
-        background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
-    }
-    
-    /* Info Box */
-    .info-box {
-       
-    background: linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%);
-    border-left: 4px solid #00e5ff;
-    color: white;
-
-    }
-    
-    /* Success/Error Messages */
-    .success-message {
-        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-        border: 1px solid #4caf50;
-        border-radius: 10px;
-        padding: 1rem;
-        color: #2e7d32;
-    }
-    
-    .error-message {
-        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
-        border: 1px solid #f44336;
-        border-radius: 10px;
-        padding: 1rem;
-        color: #c62828;
-    }
-    
-    /* Chart Container */
-    .chart-container {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-    
-    /* Download Button */
-    .download-btn {
-        background: linear-gradient(90deg, #4caf50, #45a049);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        padding: 0.75rem 2rem;
-        font-size: 1rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-    }
-    
-    .download-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
-    }
-    
-    /* Candidate Card */
-    .candidate-card {
-        background: white;
-        border-radius: 10px;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-        border-left: 4px solid #667eea;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-    }
-    
-    .candidate-name {
-        font-weight: 600;
-        color: #333;
-    }
-    
-    .candidate-score {
-        font-size: 0.9rem;
-        color: #666;
+    .main-header { animation: fadeInDown 0.7s ease-out; }
+    .sub-header { font-size: 1.05rem; line-height: 1.6; animation: fadeInUp 0.7s ease-out; }
+    .card { margin-bottom: 1.5rem; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 16px 38px rgba(23, 34, 31, 0.10); }
+    .section-divider { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+    .stFileUploader { border: 1px dashed #9bbab0; border-radius: 12px; padding: 1rem; background: rgba(255,255,255,0.78); }
+    .stButton > button { background: var(--teal); color: white; border: 0; border-radius: 8px; padding: 0.7rem 1.4rem; font-weight: 700; box-shadow: 0 8px 18px rgba(18,107,104,0.20); }
+    .stButton > button:hover { background: #0e5553; transform: translateY(-1px); }
+    .stButton > button[kind="primary"] { background: var(--coral); box-shadow: 0 8px 18px rgba(227,111,81,0.25); }
+    .stButton > button[kind="primary"]:hover { background: #c9573c; }
+    .metric-card { min-height: 96px; display: flex; flex-direction: column; justify-content: center; }
+    .metric-value { font-family: 'Space Grotesk', sans-serif; }
+    .stDataFrame { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .success-message, .error-message { border-radius: 10px; padding: 0.9rem 1rem; }
+    .success-message { background: #e7f4ed; border: 1px solid #9bd0b2; color: #17613f; }
+    .error-message { background: #fff0ed; border: 1px solid #e7a292; color: #9b3d2b; }
+    [data-testid="stSidebar"] { border-right: 1px solid var(--line); }
+    [data-testid="stSidebar"] h3 { font-family: 'Space Grotesk', sans-serif; color: var(--ink) !important; }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 700px) {
+        .main .block-container { padding-top: 1.4rem; }
+        .main-header { font-size: 2.7rem; }
+        .sub-header { font-size: 0.95rem; }
+        .section-divider { margin: 1.5rem 0; }
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Title Section
-st.markdown('<div class="main-header">🤖 AI Resume Ranker</div>', unsafe_allow_html=True)
-st.markdown('<div class="sub-header">Professional Resume Screening Powered by NLP & Machine Learning</div>', unsafe_allow_html=True)
-
-# Decorative Elements
-st.markdown("""
-    <div style="text-align: center; margin: 1rem 0;">
-        <span style="font-size: 2rem;">✨</span>
-        <span style="font-size: 2rem;">📊</span>
-        <span style="font-size: 2rem;">🎯</span>
-    </div>
-""", unsafe_allow_html=True)
+st.markdown('<div class="eyebrow">RESUME INTELLIGENCE LAB</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">Find the resume<br><span style="color: var(--coral);">that fits the role.</span></div>', unsafe_allow_html=True)
+st.markdown('<div class="sub-header">Rank candidates, check ATS readiness, and get practical resume edits from one focused workspace.</div>', unsafe_allow_html=True)
 
 # Sidebar for Job Description
 with st.sidebar:
-    st.markdown('<div style="text-align: center; margin-bottom: 1rem;">📋</div>', unsafe_allow_html=True)
-    st.markdown('<h3 style="text-align: center; color: #333;">Job Description</h3>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-mark">01</div>', unsafe_allow_html=True)
+    st.markdown('<h3>Role brief</h3>', unsafe_allow_html=True)
     
     st.markdown("---")
     
     job_desc_input = st.text_area(
-        "Paste Job Description",
+        "Paste the job description",
         height=350,
         placeholder="Enter the job description text here...\n\nExample:\nWe are looking for a Python Developer with 3+ years of experience in web development, Django, REST APIs, and database management...",
-        label_visibility="collapsed"
+        label_visibility="visible"
     )
+
+    scoring_mode = st.selectbox(
+        "ATS scoring mode",
+        ["Balanced", "Keyword focus", "Structure focus"],
+        help="Choose whether the score should emphasize job keywords or resume structure."
+    )
+    show_resume_preview = st.checkbox("Show extracted resume text", value=False)
     
     st.markdown("---")
     
     st.markdown("""
         <div class="info-box">
-            <strong>💡 Pro Tip:</strong> Include key skills, requirements, and qualifications for better matching!
+            <strong>Better matching:</strong> Include skills, tools, seniority, and must-have requirements.
         </div>
     """, unsafe_allow_html=True)
     
@@ -359,8 +137,8 @@ with st.sidebar:
     
     st.markdown("""
         <div style="text-align: center; color: #666; font-size: 0.9rem;">
-            <strong>Powered by:</strong><br>
-            TF-IDF • Cosine Similarity • NLP
+            <strong>Analysis stack</strong><br>
+            TF-IDF &nbsp;•&nbsp; ATS signals &nbsp;•&nbsp; NLP
         </div>
     """, unsafe_allow_html=True)
 
@@ -368,8 +146,9 @@ with st.sidebar:
 col1, col2 = st.columns([2, 1])
 
 with col1:
-    st.markdown('<div class="section-header">📁 Upload Resumes</div>', unsafe_allow_html=True)
-    st.markdown("**Step 2:** Upload candidate resumes (PDF or TXT files)")
+    st.markdown('<div class="eyebrow">02 / CANDIDATE FILES</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">Bring the resumes into focus</div>', unsafe_allow_html=True)
+    st.markdown("Upload one or more PDF or TXT resumes. We will rank them against the role brief and surface specific edits.")
     
     # File Upload Section
     uploaded_files = st.file_uploader(
@@ -380,7 +159,8 @@ with col1:
     )
 
 with col2:
-    st.markdown('<div class="section-header">📊 Quick Stats</div>', unsafe_allow_html=True)
+    st.markdown('<div class="eyebrow">LIVE QUEUE</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-header">Ready to review</div>', unsafe_allow_html=True)
     
     if uploaded_files:
         st.markdown(f"""
@@ -458,7 +238,7 @@ if analyze_button:
             if text:
                 resume_texts.append(text)
                 candidate_names.append(get_candidate_name(uploaded_file))
-                resume_analyses.append(analyze_resume(job_desc_input, text))
+                resume_analyses.append(analyze_resume(job_desc_input, text, scoring_mode))
         
         # Run the Ranking Model
         if resume_texts:
@@ -539,7 +319,7 @@ if analyze_button:
                 st.caption("A practical checklist based on the job description and the resume text. ATS scores are guidance, not a hiring decision.")
 
                 candidate_tabs = st.tabs([name for name in candidate_names])
-                for tab, candidate_name, ats in zip(candidate_tabs, candidate_names, resume_analyses):
+                for resume_index, (tab, candidate_name, ats) in enumerate(zip(candidate_tabs, candidate_names, resume_analyses)):
                     with tab:
                         score_class = "ats-good" if ats["ats_score"] >= 70 else "ats-warn"
                         st.markdown(f"<h3 class='{score_class}'>ATS readiness: {ats['ats_score']} / 100</h3>", unsafe_allow_html=True)
@@ -573,6 +353,14 @@ if analyze_button:
                                     hide_index=True,
                                     use_container_width=True,
                                 )
+                        if show_resume_preview:
+                            with st.expander("View extracted resume text"):
+                                st.text_area(
+                                    "Extracted text",
+                                    resume_texts[resume_index],
+                                    height=240,
+                                    key=f"preview_{resume_index}",
+                                )
 
                 # Score Visualization
                 st.markdown('<div class="section-header">📊 Score Visualization</div>', unsafe_allow_html=True)
@@ -601,6 +389,27 @@ if analyze_button:
                     data=csv,
                     file_name="resume_ranking_results.csv",
                     mime="text/csv"
+                )
+
+                ats_report = pd.DataFrame([
+                    {
+                        "Candidate": candidate_name,
+                        "ATS Score": ats["ats_score"],
+                        "Keyword Match": ats["keyword_score"],
+                        "Section Score": ats["section_score"],
+                        "Contact Score": ats["contact_score"],
+                        "Word Count": ats["word_count"],
+                        "Missing Keywords": ", ".join(ats["missing_keywords"]),
+                        "Repeated Words": ", ".join(f"{word} ({count}x)" for word, count in ats["repeated_words"]),
+                        "Suggestions": " | ".join(ats["suggestions"]),
+                    }
+                    for candidate_name, ats in zip(candidate_names, resume_analyses)
+                ])
+                st.download_button(
+                    label="Download detailed ATS report",
+                    data=ats_report.to_csv(index=False).encode("utf-8"),
+                    file_name="resume_ats_report.csv",
+                    mime="text/csv",
                 )
 
             except Exception as e:
