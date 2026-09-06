@@ -1,8 +1,10 @@
 import streamlit as st
 import tempfile
 import os
+import pandas as pd
 from resume_parser import extract_text_from_pdf, extract_text_from_txt, get_candidate_name
 from similarity_model import rank_resumes
+from ats_checker import analyze_resume
 
 # Page Configuration
 st.set_page_config(
@@ -20,6 +22,48 @@ st.set_page_config(
 # Custom CSS for Premium Styling
 st.markdown("""
     <style>
+    :root {
+        --ink: #17221f;
+        --muted: #66736e;
+        --paper: #f5f7f2;
+        --panel: #ffffff;
+        --line: #dfe7df;
+        --teal: #126b68;
+        --coral: #e36f51;
+    }
+    [data-testid="stAppViewContainer"] {
+        background: radial-gradient(circle at 8% 0%, #e6f2ee 0, transparent 32%), var(--paper);
+    }
+    [data-testid="stHeader"] { background: transparent; }
+    .main .block-container { max-width: 1180px; padding-top: 2.5rem; }
+    .main-header {
+        color: var(--ink);
+        font-size: clamp(2.2rem, 5vw, 4.6rem);
+        letter-spacing: -0.04em;
+        line-height: 0.95;
+        text-align: left;
+        margin-bottom: 0.7rem;
+    }
+    .sub-header { color: var(--muted); text-align: left; max-width: 650px; margin-bottom: 2.5rem; }
+    .card, .candidate-card, .chart-container {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(23, 34, 31, 0.06);
+    }
+    .card { padding: 1.4rem; }
+    .candidate-card { padding: 0.9rem 1rem; border-left: 4px solid var(--teal); }
+    .candidate-name, .section-header { color: var(--ink); }
+    .section-header { font-size: 1.25rem; font-weight: 700; }
+    .metric-card { background: var(--teal); border-radius: 12px; padding: 1.2rem; box-shadow: none; }
+    .stButton > button[kind="primary"] { background: var(--coral); border: 0; border-radius: 8px; }
+    .stButton > button[kind="primary"]:hover { background: #c9573c; }
+    .stFileUploader, [data-testid="stSidebar"] { background: rgba(255,255,255,0.72); }
+    .info-box { background: var(--ink); border-left: 4px solid var(--coral); border-radius: 8px; padding: 1rem; }
+    .ats-good { color: #16704f; font-weight: 700; }
+    .ats-warn { color: #b15a20; font-weight: 700; }
+    .keyword-chip { display: inline-block; background: #e6f2ee; color: var(--teal); border-radius: 999px; padding: 0.25rem 0.55rem; margin: 0.15rem; font-size: 0.8rem; }
+
     /* Global Styles */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
     
@@ -28,10 +72,7 @@ st.markdown("""
     }
     
     /* Main Container */
-    .main {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-    }
+    .main { min-height: 100vh; }
     
     /* Header Styles */
     .main-header {
@@ -396,6 +437,7 @@ if analyze_button:
     with st.spinner("⏳ Analyzing resumes..."):
         resume_texts = []
         candidate_names = []
+        resume_analyses = []
         
         for uploaded_file in uploaded_files:
             # Save uploaded file to a temporary location
@@ -416,6 +458,7 @@ if analyze_button:
             if text:
                 resume_texts.append(text)
                 candidate_names.append(get_candidate_name(uploaded_file))
+                resume_analyses.append(analyze_resume(job_desc_input, text))
         
         # Run the Ranking Model
         if resume_texts:
@@ -492,10 +535,48 @@ if analyze_button:
                     </div>
                 """, unsafe_allow_html=True)
 
+                st.markdown('<div class="section-header">🧭 ATS Resume Health</div>', unsafe_allow_html=True)
+                st.caption("A practical checklist based on the job description and the resume text. ATS scores are guidance, not a hiring decision.")
+
+                candidate_tabs = st.tabs([name for name in candidate_names])
+                for tab, candidate_name, ats in zip(candidate_tabs, candidate_names, resume_analyses):
+                    with tab:
+                        score_class = "ats-good" if ats["ats_score"] >= 70 else "ats-warn"
+                        st.markdown(f"<h3 class='{score_class}'>ATS readiness: {ats['ats_score']} / 100</h3>", unsafe_allow_html=True)
+                        score_cols = st.columns(4)
+                        for score_col, label, value in zip(
+                            score_cols,
+                            ["Keyword match", "Sections", "Contact", "Word count"],
+                            [f"{ats['keyword_score']}%", f"{ats['section_score']}%", f"{ats['contact_score']}%", str(ats['word_count'])],
+                        ):
+                            with score_col:
+                                st.metric(label, value)
+
+                        detail_col, suggestion_col = st.columns(2)
+                        with detail_col:
+                            st.markdown("**Matched job terms**")
+                            if ats["matched_keywords"]:
+                                chips = "".join(f"<span class='keyword-chip'>{term}</span>" for term in ats["matched_keywords"][:18])
+                                st.markdown(chips, unsafe_allow_html=True)
+                            else:
+                                st.info("No strong keyword overlap found yet.")
+                            st.markdown("**Terms to consider adding**")
+                            st.write(", ".join(ats["missing_keywords"][:12]) or "No major gaps detected.")
+                        with suggestion_col:
+                            st.markdown("**Add or remove**")
+                            for suggestion in ats["suggestions"]:
+                                st.markdown(f"- {suggestion}")
+                            if ats["repeated_words"]:
+                                st.markdown("**Repeated words**")
+                                st.dataframe(
+                                    pd.DataFrame(ats["repeated_words"], columns=["Word", "Frequency"]),
+                                    hide_index=True,
+                                    use_container_width=True,
+                                )
+
                 # Score Visualization
                 st.markdown('<div class="section-header">📊 Score Visualization</div>', unsafe_allow_html=True)
 
-                import pandas as pd
                 import altair as alt
 
                 chart = alt.Chart(ranking_df).mark_bar().encode(
